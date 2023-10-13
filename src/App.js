@@ -1,50 +1,41 @@
 import "./App.css";
 import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
-import ExpensesFilter from "./components/ExpensesFilter/ExpensesFilter"
-import { useState } from "react";
-
-
-const DUMMY_EXPENSES = [
-  {
-    id: "e1",
-    title: "Toilet Paper",
-    amount: 94.12,
-    date: new Date(2020, 7, 14),
-  },
-  { id: "e2", title: "New TV", amount: 799.49, date: new Date(2021, 2, 12) },
-  {
-    id: "e3",
-    title: "Car Insurance",
-    amount: 294.67,
-    date: new Date(2021, 2, 28),
-  },
-  {
-    id: "e4",
-    title: "New Desk (Wooden)",
-    amount: 450,
-    date: new Date(2021, 5, 12),
-  },
-];
-
-
-
+import { db } from "./firebase.js";
+import { collection, onSnapshot, addDoc, Timestamp } from "firebase/firestore";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [expenses, setExpenses] = useState([]);
 
-
-  const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
+  useEffect(() => {
+    onSnapshot(collection(db, "expenses"), (snapshot) => {
+      setExpenses(
+        snapshot.docs.map((doc) => {
+          return {
+            id: doc.data().id,
+            title: doc.data().title,
+            amount: doc.data().amount,
+            date: doc.data().date.toDate(),
+          };
+        })
+      );
+    });
+  }, [expenses]);
   const addExpenseHandler = (expense) => {
+    addDoc(collection(db, "expenses"), {
+      ...expense,
+      date: Timestamp.fromDate(expense.date),
+    });
     setExpenses((prevExpenses) => {
       return [expense, ...prevExpenses];
     });
   };
 
-
   return (
     <div>
-      <NewExpense onAddExpense={addExpenseHandler}/>
-      <Expenses data={expenses}/>
+      <NewExpense onAddExpense={addExpenseHandler} />
+      <Expenses data={expenses} />
     </div>
   );
 }
