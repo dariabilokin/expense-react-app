@@ -1,0 +1,49 @@
+$color_1: white;
+$color_2: #220131;
+$background-color_1: #a892ee;
+$background-color_2: #40005d;
+$background-color_3: #510674;
+$background-color_4: transparent;
+$background-color_5: #ddb3f8;
+$border-color_1: #510674;
+$border-color_2: transparent;
+
+.new-expense {
+	background-color: $background-color_1;
+	padding: 1rem;
+	margin: 2rem auto;
+	width: 50rem;
+	max-width: 95%;
+	border-radius: 12px;
+	text-align: center;
+	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+	button {
+		font: inherit;
+		cursor: pointer;
+		padding: 1rem 2rem;
+		border: 1px solid #40005d;
+		background-color: $background-color_2;
+		color: $color_1;
+		border-radius: 12px;
+    margin-right: 0.8rem;
+		&:hover {
+			background-color: $background-color_3;
+			border-color: $border-color_1;
+		}
+		&:active {
+			background-color: $background-color_3;
+			border-color: $border-color_1;
+		}
+	}
+	button.alternative {
+		color: $color_2;
+		border-color: $border-color_2;
+		background-color: $background-color_4;
+		&:hover {
+			background-color: $background-color_5;
+		}
+		&:active {
+			background-color: $background-color_5;
+		}
+	}
+}

@@ -1,81 +1,71 @@
-import React, { useState } from "react";
-import "./ExpenseForm.css";
+import React from "react";
+import "./ExpenseForm.scss";
+import { useForm } from "react-hook-form";
 
 const ExpenseForm = (props) => {
-  // const [userInput, setUserInput] = useState({
-  //     enteredTitle: '',
-  //     enteredAmount: '',
-  //     enteredDate: ''
-  // });
+  const { register, handleSubmit, reset, errors } = useForm();
 
-  const [enteredTitle, setEnteredTitle] = useState("");
-  const [enteredAmount, setEnteredAmount] = useState("");
-  const [enteredDate, setEnteredDate] = useState("");
-
-  const submitHandler = (event) => {
-    event.preventDefault();
+  const submitHandler = (data) => {
     const expenseData = {
-      title: enteredTitle,
-      amount: +enteredAmount,
-      date: new Date(enteredDate),
+      title: data.title,
+      category: data.category,
+      amount: +data.amount,
+      date: new Date(data.date),
     };
-    console.log("expenseData", expenseData);
     props.onSaveExpenseData(expenseData);
-
-    setEnteredTitle("");
-    setEnteredAmount("");
-    setEnteredDate("");
-  };
-
-  const titleChangeHandler = (event) => {
-    setEnteredTitle(event.target.value);
-  };
-
-  const amountChangeHandler = (event) => {
-    setEnteredAmount(event.target.value);
-  };
-
-  const dateChangeHandler = (event) => {
-    setEnteredDate(event.target.value);
+    reset();
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <div className="new-expense__controls">
-        <div className="new-expense__control">
-          <label>Title</label>
-          <input
-            type="text"
-            value={enteredTitle}
-            onChange={titleChangeHandler}
-          ></input>
-        </div>
-        <div className="new-expense__control">
+    <form onSubmit={handleSubmit(submitHandler)}>
+      <div className="expense-form__container">
+        <fieldset>
+          <label htmlFor="title">Title</label>
+          <input {...register("title", { required: true })} />
+        </fieldset>
+        <fieldset>
+          <label htmlFor="category">Category</label>
+          <select {...register("category", { required: true })}>
+            <option value=""></option>
+            <option value="Fixed">Fixed</option>
+            <option value="Groceries">Groceries</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Eating out">Eating out</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Rent">Rent</option>
+            <option value="Insurance">Insurance</option>
+            <option value="Education">Education</option>
+            <option value="Other">Other</option>
+          </select>
+        </fieldset>
+        <fieldset>
           <label>Amount</label>
           <input
             type="number"
             min="0.01"
             step="0.01"
-            value={enteredAmount}
-            onChange={amountChangeHandler}
+            {...register("amount", { valueAsNumber: true, required: true })}
           ></input>
-        </div>
-        <div className="new-expense__control">
+        </fieldset>
+        <fieldset>
           <label>Date</label>
           <input
             type="date"
             min="2019-01-01"
             max={new Date().toISOString().split("T")[0]}
-            value={enteredDate}
-            onChange={dateChangeHandler}
+            {...register("date", { required: true })}
           ></input>
-        </div>
+        </fieldset>
       </div>
-      <div className="new-expense__actions">
+      <div className="new-expense__buttons">
         <button type="button" onClick={props.onCancel}>
           Cancel
         </button>
-        <button type="submit">Add Expense</button>
+        <button className="" type="submit">
+          Add Expense
+        </button>
       </div>
     </form>
   );

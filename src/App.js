@@ -3,7 +3,7 @@ import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
 import { db } from "./firebase.js";
 import { collection, onSnapshot, addDoc, Timestamp } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -16,6 +16,7 @@ function App() {
             id: doc.data().id,
             title: doc.data().title,
             amount: doc.data().amount,
+            category: doc.data().category,
             date: doc.data().date.toDate(),
           };
         })
@@ -33,10 +34,10 @@ function App() {
   };
 
   return (
-    <div>
+    <Fragment>
       <NewExpense onAddExpense={addExpenseHandler} />
       <Expenses data={expenses} />
-    </div>
+    </Fragment>
   );
 }
 
